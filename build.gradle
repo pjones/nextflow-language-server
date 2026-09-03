@@ -30,17 +30,22 @@ test {
 }
 
 configurations {
+  groovyCompiler
   nextflowRuntime
 }
 
+// Pin the Groovy compiler classpath: the Groovy plugin otherwise infers a full
+// groovy-all classpath, dragging in Ant (groovy-ant) and javaparser/qdox
+// (groovy-groovydoc), none of which this build uses
+tasks.withType(GroovyCompile).configureEach {
+  groovyClasspath = configurations.groovyCompiler
+}
+
 dependencies {
+  groovyCompiler 'org.apache.groovy:groovy:4.0.31'
+
   implementation 'io.nextflow:nf-lang:26.04.6'
   implementation 'org.apache.groovy:groovy:4.0.31'
-  implementation 'org.apache.groovy:groovy-ant:4.0.31'
-  implementation 'org.apache.groovy:groovy-astbuilder:4.0.31'
-  implementation 'org.apache.groovy:groovy-datetime:4.0.31'
-  implementation 'org.apache.groovy:groovy-dateutil:4.0.31'
-  implementation 'org.apache.groovy:groovy-groovydoc:4.0.31'
   implementation 'org.apache.groovy:groovy-json:4.0.31'
   implementation 'org.apache.groovy:groovy-yaml:4.0.31'
   implementation 'org.eclipse.lsp4j:org.eclipse.lsp4j:0.23.0'
